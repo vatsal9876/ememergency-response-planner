@@ -8,11 +8,11 @@ int main() {
     Graph cityGraph;
     MapLoader::loadMapFromFile("maps/city_map.txt", cityGraph);
 
-    std::string source, destination;
-    std::cout << "Enter source: ";
-    std::cin >> source;
-    std::cout << "Enter destination: ";
-    std::cin >> destination;
+    string source, destination;
+    cout << "Enter source: ";
+    cin >> source;
+    cout << "Enter destination: ";
+    cin >> destination;
 
     auto p = Dijkstra::shortestPath(cityGraph, source);
     auto distances=p.first;

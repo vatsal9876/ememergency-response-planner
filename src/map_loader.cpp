@@ -4,51 +4,52 @@
 #include <iostream>
 #include <unordered_map>
 
-void MapLoader::loadMapFromFile(const std::string& filename, Graph& graph) {
-    std::ifstream file(filename);
+using namespace std;
+
+void MapLoader::loadMapFromFile(const string& filename, Graph& graph) {
+    ifstream file(filename);
     if (!file.is_open()) {
-        std::cerr << "Error: Cannot open map file.\n";
+        cerr << "Error: Cannot open map file.\n";
         return;
     }
 
-    std::string line;
+    string line;
     while (getline(file, line)) {
         if (line.empty() || line[0] == '#') continue;
 
-        std::stringstream ss(line);
-        std::string from, to, roadType;
+        stringstream ss(line);
+        string from, to, roadType;
         int weight;
         ss >> from >> to >> weight >> roadType;
 
-        int adjustedWeight = weight * roadTypeToWeight(roadType);
+        // int adjustedWeight = weight * roadTypeToWeight(roadType);
 
-        // Debug output to verify weight calculation
-        std::cout << "[DEBUG] From: " << from
-                  << " → " << to
-                  << " | Base: " << weight
-                  << " | Terrain: " << roadType
-                  << " | Adjusted: " << adjustedWeight << std::endl;
+        // cout << "[DEBUG] From: " << from
+        //      << " → " << to
+        //      << " | Base: " << weight
+        //      << " | Terrain: " << roadType
+        //      << " | Adjusted: " << adjustedWeight << endl;
 
-        graph.addEdge(from, to, adjustedWeight, roadType);
+        graph.addEdge(from, to, weight, roadType);
     }
 
     file.close();
 }
 
-int MapLoader::roadTypeToWeight(const std::string& roadType) {
-    static std::unordered_map<std::string, int> weightMap = {
+int MapLoader::roadTypeToWeight(const string& roadType) {
+    static unordered_map<string, int> weightMap = {
         {"Highway", 2},
         {"Local", 5},
         {"Congested", 10},
         {"Alley", 8},
-        {"Blocked", 1000000000}  // effectively infinite
+        {"Blocked", 1000000000}
     };
 
     auto it = weightMap.find(roadType);
     if (it != weightMap.end()) {
         return it->second;
     } else {
-        std::cerr << "[WARNING] Unknown road type: " << roadType << " — using default cost 10\n";
+        cerr << "[WARNING] Unknown road type: " << roadType << " — using default cost 10\n";
         return 10;
     }
 }
